@@ -43,6 +43,8 @@ def eval_loss(loader, device, net, criterion):
 def fit(net, optimizer, criterion, num_epochs, train_loader, test_loader, device, history):
 
     base_epochs = len(history)
+
+    dev_cpu=torch.device('cpu')
   
     for epoch in range(base_epochs, num_epochs+base_epochs):
         train_loss = 0
@@ -79,7 +81,7 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, test_loader, device
             predicted = torch.max(outputs, 1)[1]
 
             # 正解件数算出
-            train_acc += (predicted == labels).sum()
+            train_acc += (predicted == labels).sum().to(dev_cpu)
 
             # 損失と精度の計算
             avg_train_loss = train_loss / count
@@ -106,7 +108,7 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, test_loader, device
             predicted = torch.max(outputs, 1)[1]
 
             #正解件数算出
-            val_acc += (predicted == labels).sum()
+            val_acc += (predicted == labels).sum().to(dev_cpu)
 
             # 損失と精度の計算
             avg_val_loss = val_loss / count
